@@ -32,6 +32,10 @@ cp .env.local.example .env.local
 
 Go to the Project Settings (the cog icon), open the API tab, and find your API URL and `anon` key and set them in your newly created `.env.local` file.
 
+#### [Optional] - Set up OAuth providers
+
+You can use third-party login providers like GitHub or Google. Refer to the [docs](https://supabase.io/docs/guides/auth#third-party-logins) to learn how to configure these.
+
 ### 3. Install and run
 
 ```bash
