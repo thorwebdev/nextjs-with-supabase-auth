@@ -1,6 +1,6 @@
 # Example: Supabase authentication client- and server-side (API routes)
 
-This example shows how to use Supabase auth both on the client (`useUser` hook) and server in [API routes](https://nextjs.org/docs/api-routes/introduction).
+This example shows how to use Supabase auth both on the client (`useAuth` hook) and server in [API routes](https://nextjs.org/docs/api-routes/introduction) and when using [`getServerSideProps` (Server-side Rendering)](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering).
 
 ## Demo
 

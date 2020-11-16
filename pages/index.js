@@ -1,21 +1,19 @@
+import Link from 'next/link';
 import useSWR from 'swr';
-import { useUser } from '../utils/useUser';
+import { useAuth } from '../utils/useAuth';
 import { supabase } from '../utils/initSupabase';
 import SupabaseAuth from '../components/SupabaseAuth';
 
-const fetcher = (url, token) =>
+const fetcher = (url) =>
   fetch(url, {
     method: 'GET',
-    headers: new Headers({ 'Content-Type': 'application/json', token }),
+    headers: new Headers({ 'Content-Type': 'application/json' }),
     credentials: 'same-origin',
   }).then((res) => res.json());
 
 const Index = () => {
-  const { user, session } = useUser();
-  const { data, error } = useSWR(
-    session ? ['/api/getUser', session.access_token] : null,
-    fetcher
-  );
+  const { user } = useAuth();
+  const { data, error } = useSWR(user ? '/api/getUser' : null, fetcher);
   if (!user) {
     return (
       <>
@@ -53,6 +51,10 @@ const Index = () => {
       ) : (
         <div>Loading...</div>
       )}
+
+      <Link href="/profile">
+        <a>SSR example with getServerSideProps</a>
+      </Link>
     </div>
   );
 };
