@@ -13,8 +13,9 @@ export default function Profile({ user }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const token = req.cookies.supabase_auth_token;
-  const { data: user } = await supabase.auth.api.getUser(token);
+  const { data: user } = await supabase.auth.api.getUser(
+    req.cookies['sb:token']
+  );
 
   if (!user) {
     // If no user, redirect to index.

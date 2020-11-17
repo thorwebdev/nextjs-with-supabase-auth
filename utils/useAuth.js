@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './initSupabase';
-import { setCookie, deleteCookie } from '../utils/cookies';
+
+const postData = (url, data = {}) =>
+  fetch(url, {
+    method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    credentials: 'same-origin',
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
 
 const useAuth = () => {
   const [session, setSession] = useState(null);
@@ -8,23 +15,17 @@ const useAuth = () => {
 
   useEffect(() => {
     const supabaseAuthSession = supabase.auth.session();
-
-    if (supabaseAuthSession?.access_token)
-      setCookie('supabase_auth_token', supabaseAuthSession.access_token, {
-        'max-age': supabaseAuthSession.expires_in,
-      });
-
     setSession(supabaseAuthSession);
     setUser(supabaseAuthSession?.user ?? null);
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, supabaseAuthSession) => {
+      async (event, supabaseAuthSession) => {
         console.log(`Supbase auth event: ${event}`);
 
-        if (event === 'SIGNED_IN')
-          setCookie('supabase_auth_token', supabaseAuthSession.access_token, {
-            'max-age': supabaseAuthSession.expires_in,
-          });
-        if (event === 'SIGNED_OUT') deleteCookie('supabase_auth_token');
+        await postData('/api/auth', {
+          event,
+          token: supabaseAuthSession?.access_token ?? null,
+          maxAge: supabaseAuthSession?.expires_in ?? null,
+        });
 
         setSession(supabaseAuthSession);
         setUser(supabaseAuthSession?.user ?? null);
